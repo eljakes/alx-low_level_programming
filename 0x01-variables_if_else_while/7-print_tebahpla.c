@@ -2,17 +2,18 @@
 /**
  * main - Entry point
  *
- * Description: Prints all single-digit numbers of base 10
- *              using the putchar function and no char variables.
+ * Description: Prints the lowercase alphabet in reverse
+ *              using the putchar function.
  *
  * Return: Always 0 (Success)
  */
 int main(void)
 {
-int number;
-for (number = 0; number <= 9; number++)
+char letter = 'z';
+while (letter >= 'a')
 {
-putchar(number + '0');
+putchar(letter);
+letter--;
 }
 putchar('\n');
 return (0);
