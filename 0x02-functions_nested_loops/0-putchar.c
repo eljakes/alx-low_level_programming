@@ -1,14 +1,12 @@
-#include "holberton.h"
+#include "main.h"
 /**
- * main - Entry point of the program
- *
- * Description: Prints "_putchar" followed by a newline character.
- *
- * Return: Always 0 (Success)
+ * main - print _putchar
+ * is written by mbajo
+ * Return: 0
  */
 int main(void)
 {
-	_putchar('_');
+	putchar('');
 	_putchar('p');
 	_putchar('u');
 	_putchar('t');
