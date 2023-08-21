@@ -13,7 +13,7 @@
 int main(void)
 {
 char password[PASSWORD_LENGTH + 1]; /* +1 for null terminator */
-const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGZ0123456789";
 
 srand(time(NULL)); /* Seed the random number generator with current time */
 
