@@ -1,44 +1,32 @@
 #include "main.h"
-#include <stdbool.h> /* for using the bool type */
+#include <stdio.h>
 
 /**
- * cap_string - Capitalizes all words of a string.
- * @str: The input string.
- *
- * Return: A pointer to the modified string.
- */
+  * cap_string - ...
+  * @s: ...
+  *
+  * Return: char value
+  */
+char *cap_string(char *s)
+{
+	int a = 0, i;
+	int cspc = 13;
+	char spc[] = {32, '\t', '\n', 44, ';', 46, '!', '?', '"', '(', ')', '{', '}'};
 
-char *cap_string(char *str)
-{
-int i = 0;
-bool new_word = true;
+	while (s[a])
+	{
+		i = 0;
 
-while (str[i] != '\0')
-{
-if (str[i] >= 'a' && str[i] <= 'z')
-{
-/*Capitalize the first letter of a new word*/
-if (new_word)
-{
-str[i] = str[i] - 'a' + 'A';
-new_word = false;
-}
-}
-else
-{
-/*Set new_word to true if current character is a separator*/
-if (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' ||
-str[i] == ',' || str[i] == ';' || str[i] == '.' ||
-str[i] == '!' || str[i] == '?' || str[i] == '"' ||
-str[i] == '(' || str[i] == ')' || str[i] == '{' ||
-str[i] == '}')
-{
-new_word = true;
-}
-}
+		while (i < cspc)
+		{
+			if ((a == 0 || s[a - 1] == spc[i]) && (s[a] >= 97 && s[a] <= 122))
+				s[a] -= 32;
 
-i++;
-}
+			i++;
+		}
 
-return (str);
+		a++;
+	}
+
+	return (s);
 }
