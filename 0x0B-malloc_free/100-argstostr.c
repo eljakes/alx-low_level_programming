@@ -1,47 +1,49 @@
-#include <stdlib.h>
+#include "main.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
- * argstostr - function concatenates all the arguments of your program.
- * @ac: pointer
- * @av: altura
- *
- * REturn: result
- */
-
+* argstostr - concatenates all the arguments of the program.
+* @ac: The number of arguments.
+* @av: An array of pointers to the arguments.
+*
+* Return: A pointer to the new concatenated string.
+*         NULL if ac == 0 or av == NULL or if malloc fails.
+*/
 char *argstostr(int ac, char **av)
 {
-	int i = 0, j = 0, cont = 0;
-	char *result, *new;
+char *str;
+int i, j, k, len = 0;
 
-	if (ac == 0 || av == NULL)
-		return (NULL);
-	while (i < ac)
-	{
-		new = av[i];
-		while (*new)
-		{
-			cont++;
-			new++;
-		}
-		cont++;
-		i++;
-	}
-	result = malloc(cont + 1);
-	i = 0;
-	while (i < ac)
-	{
-		new = av[i];
-		while (*new)
-		{
-			result[j] = *new;
-			new++;
-			j++;
-		}
-		result[j] = '\n';
-		j++;
-		i++;
-	}
-	result[cont + 1] = '\0';
-	return (result);
+if (ac == 0 || av == NULL)
+return (NULL);
+
+for (i = 0; i < ac; i++)
+{
+for (j = 0; av[i][j]; j++)
+len++;
+len++; /* add space for newline character */
 }
+len++; /* add space for null terminator */
+
+str = malloc(sizeof(char) * len);
+
+if (str == NULL)
+return (NULL);
+
+k = 0;
+for (i = 0; i < ac; i++)
+{
+for (j = 0; av[i][j]; j++)
+{
+str[k] = av[i][j];
+k++;
+}
+str[k] = '\n'; /* add newline character */
+k++;
+}
+str[k] = '\0'; /* add null terminator */
+
+return (str);
+}
+
