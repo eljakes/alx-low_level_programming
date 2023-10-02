@@ -2,52 +2,43 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdio.h>
 #include "main.h"
 #include <stdlib.h>
 
 /**
-* read_textfile - Reads a text file and prints it to the POSIX standard output.
-* @filename: Name of the file to read.
-* @letters: Number of letters to read and print.
-*
-* Return: The actual number of letters read and printed. If an error occurs,
-* return -1.
-*/
+ * read_textfile -  reads text file and prints to the POSIX std output
+ * @filename: name of the file to read
+ * @letters: number of the letters to print
+ *
+ * Return: actual number of letters it could read and print
+ */
+
 ssize_t read_textfile(const char *filename, size_t letters)
 {
 	int fd = 0, fdr = 0, fdw = 0;
-	char *buf = NULL;
+	char *buf;
 
 	if (filename == NULL)
-		return (-1);
-
+		return (0);
 	fd = open(filename, O_RDONLY);
 	if (fd == -1)
-		return (-1);
-
+		return (0);
 	buf = malloc(sizeof(char) * letters);
 	if (buf == NULL)
-	{
-		close(fd);
-		return (-1);
-	}
-
+		return (0);
 	fdr = read(fd, buf, letters);
 	if (fdr == -1)
 	{
 		free(buf);
-		close(fd);
-		return (-1);
+		return (0);
 	}
-
 	fdw = write(STDOUT_FILENO, buf, fdr);
 	if (fdw == -1 || fdw != fdr)
 	{
 		free(buf);
-		close(fd);
-		return (-1);
+		return (0);
 	}
-
 	free(buf);
 	close(fd);
 	return (fdr);
