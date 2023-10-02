@@ -1,77 +1,63 @@
-#include "main.h"
-#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-/**
-* main - Copies the contents of one file to another.
-* @argc: The number of command-line arguments.
-* @argv: An array of command-line argument strings.
-*
-* Return: 0 on success, or an error code on failure.
-*/
+ssize_t read_and_write(int src_fd, int dest_fd)
+{
+ssize_t bytes_read, bytes_written;
+char buffer[1024];
+
+while ((bytes_read = read(src_fd, buffer, 1024)) > 0)
+{
+bytes_written = write(dest_fd, buffer, bytes_read);
+if (bytes_written == -1 || bytes_written != bytes_read)
+return (-1);
+}
+
+return (bytes_read);
+}
+
 int main(int argc, char *argv[])
 {
-	if (argc != 3)
-	{
-		dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
-		return (97);
-	}
+int src_fd, dest_fd, close_src, close_dest;
 
-	if (copy_file(argv[1], argv[2]) == 0)
-		return (0);
-	else
-		return (1);
-}
-
-/**
-* copy_file - Copies the contents of one file to another.
-* @src_path: The path to the source file.
-* @dest_path: The path to the destination file.
-*
-* Return: 0 on success, or -1 on failure.
-*/
-int copy_file(const char *src_path, const char *dest_path)
+if (argc != 3)
 {
-	int src_fd, dest_fd;
-	int _read, _write;
-	char buffer[1024];
-
-	src_fd = open(src_path, O_RDONLY);
-	if (src_fd == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", src_path);
-		return (-1);
-	}
-
-	dest_fd = open(dest_path, O_TRUNC | O_CREAT | O_WRONLY, 0664);
-	if (dest_fd == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", dest_path);
-		close(src_fd);
-		return (-1);
-	}
-
-	while ((_read = read(src_fd, buffer, 1024)) > 0)
-	{
-		_write = write(dest_fd, buffer, _read);
-		if (_write != _read)
-		{
-			dprintf(STDERR_FILENO, "Error: Can't write to %s\n", dest_path);
-			close(src_fd);
-			close(dest_fd);
-			return (-1);
-		}
-	}
-
-	if (_read == -1)
-	{
-		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", src_path);
-		close(src_fd);
-		close(dest_fd);
-		return (-1);
-	}
-
-	close(src_fd);
-	close(dest_fd);
-	return (0);
+dprintf(STDERR_FILENO, "Usage: cp file_from file_to\n");
+exit(97);
 }
 
+src_fd = open(argv[1], O_RDONLY);
+if (src_fd == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+exit(98);
+}
+
+dest_fd = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, 0664);
+if (dest_fd == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+close(src_fd);
+exit(99);
+}
+
+if (read_and_write(src_fd, dest_fd) == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+close(src_fd);
+close(dest_fd);
+exit(99);
+}
+
+close_src = close(src_fd);
+close_dest = close(dest_fd);
+if (close_src == -1 || close_dest == -1)
+{
+dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", (close_src == -1) ? src_fd : dest_fd);
+exit(100);
+}
+
+return (0);
+}
